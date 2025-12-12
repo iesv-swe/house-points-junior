@@ -51,7 +51,7 @@
         }
 
         .logo img {
-            max-width: 160px; /* medium size */
+            max-width: 160px;
             height: auto;
             opacity: 0.9;
         }
@@ -60,15 +60,21 @@
 <body>
 
     <div class="container">
-        <button>4A</button>
-        <button>4B</button>
-        <button>5A</button>
-        <button>5B</button>
+        <button onclick="goToForm()">4A</button>
+        <button onclick="goToForm()">4B</button>
+        <button onclick="goToForm()">5A</button>
+        <button onclick="goToForm()">5B</button>
     </div>
 
     <div class="logo">
         <img src="logo.png" alt="Logo placeholder">
     </div>
+
+    <script>
+        function goToForm() {
+            window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
+        }
+    </script>
 
 </body>
 </html>

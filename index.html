@@ -77,9 +77,43 @@
             height: auto;
             opacity: 0.9;
         }
+
+        /* Corner images */
+        .corner-images {
+            position: fixed;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .top-left {
+            left: 20px;
+        }
+
+        .top-right {
+            right: 20px;
+        }
+
+        .corner-images img {
+            width: 60%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Top left images -->
+    <div class="corner-images top-left">
+        <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
+        <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
+    </div>
+
+    <!-- Top right images -->
+    <div class="corner-images top-right">
+        <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
+        <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
+    </div>
 
     <!-- Main buttons -->
     <div class="container">

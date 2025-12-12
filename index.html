@@ -43,6 +43,114 @@
             transform: scale(0.97);
         }
 
+        /* Side placeholder buttons */
+        .side-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 28px;
+            background: #9ca3af;
+            color: white;
+            cursor: default;
+        }
+
+        .side-left {
+            left: 20px;
+        }
+
+        .side-right {
+            right: 20px;
+        }
+
+        /* Logo placeholder */
+        .logo {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .logo img {
+            max-width: 160px;
+            height: auto;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main buttons -->
+    <div class="container">
+        <button onclick="goToForm()">4A</button>
+        <button onclick="goToForm()">4B</button>
+        <button onclick="goToForm()">5A</button>
+        <button onclick="goToForm()">5B</button>
+    </div>
+
+    <!-- Side placeholder buttons -->
+    <button class="side-button side-left">X</button>
+    <button class="side-button side-right">X</button>
+
+    <!-- Logo -->
+    <div class="logo">
+        <img src="logo.png" alt="Logo placeholder">
+    </div>
+
+    <script>
+        function goToForm() {
+            window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
+        }
+    </script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Points</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f4f8;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 300px;
+        }
+
+        button {
+            padding: 30px 0;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #1e3a8a;
+            color: white;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
         /* Logo placeholder */
         .logo {
             position: fixed;

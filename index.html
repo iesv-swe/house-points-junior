@@ -6,10 +6,23 @@
 <title>Choose Your Class</title>
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; }
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-  body {
+html, body {
+    height: 100%;
+}
+
+/* =========================
+   BACKGROUND
+========================= */
+body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
     background: radial-gradient(circle at top, #1b2a4a 0%, #0b1020 45%, #02030a 100%);
     color: #e6ebff;
@@ -17,210 +30,218 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    padding: 20px;
-  }
+}
 
-  body::before {
+/* Subtle glow */
+body::before {
     content: "";
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(circle at 25% 15%, rgba(120,150,255,0.16), transparent 42%),
-      radial-gradient(circle at 75% 85%, rgba(80,120,255,0.12), transparent 48%);
+        radial-gradient(circle at 25% 15%, rgba(120,150,255,0.15), transparent 40%),
+        radial-gradient(circle at 75% 85%, rgba(80,120,255,0.10), transparent 45%);
     animation: glow 18s ease-in-out infinite alternate;
     pointer-events: none;
-  }
+}
 
-  @keyframes glow {
+@keyframes glow {
     from { opacity: 0.6; }
     to   { opacity: 1; }
-  }
+}
 
-  .wrapper {
-    width: min(1200px, 96vw);
-    height: min(820px, 94vh);
+/* =========================
+   LAYOUT
+========================= */
+.wrapper {
+    width: 100%;
+    max-width: 900px;
+    padding: 24px 20px 40px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
-  }
+    align-items: center;
+    gap: 22px;
+}
 
-  header {
+header {
     text-align: center;
-    padding-top: 6px;
-  }
+}
 
-  header h1 {
-    font-size: clamp(22px, 3vw, 36px);
-    letter-spacing: 0.6px;
-  }
+header h1 {
+    font-size: clamp(22px, 3vw, 34px);
+}
 
-  header p {
+header p {
     margin-top: 6px;
     color: #a9b4ff;
-    font-size: clamp(13px, 1.5vw, 16px);
-  }
+    font-size: clamp(13px, 1.4vw, 16px);
+}
 
-  /* Grid: keep the cards from becoming ridiculously wide */
-  .grid {
-    flex: 1;
+/* =========================
+   GRID (LOCKED 2x2)
+========================= */
+.grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
-    gap: clamp(16px, 2.6vw, 26px);
-    align-items: stretch;
-  }
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+    width: 100%;
+    max-width: 720px;   /* THIS STOPS HUGE CARDS */
+}
 
-  /* Tile: define a predictable card height; scale content within it */
-  .tile {
-    border-radius: 26px;
+/* =========================
+   TILE (FIXED SHAPE)
+========================= */
+.tile {
+    aspect-ratio: 4 / 5;  /* CRITICAL: prevents tall stretching */
+    background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.08),
+        rgba(255,255,255,0.02)
+    );
+    border-radius: 22px;
     border: 1px solid rgba(255,255,255,0.12);
-    background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
     box-shadow:
-      0 22px 50px rgba(0,0,0,0.72),
-      inset 0 0 42px rgba(120,150,255,0.10);
+        0 20px 45px rgba(0,0,0,0.7),
+        inset 0 0 36px rgba(120,150,255,0.10);
     cursor: pointer;
-    padding: clamp(14px, 1.6vw, 18px);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 16px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    min-height: 0; /* important for flex children sizing correctly */
-  }
+}
 
-  .tile:hover {
-    transform: translateY(-6px);
+.tile:hover {
+    transform: translateY(-5px);
     box-shadow:
-      0 34px 70px rgba(0,0,0,0.86),
-      inset 0 0 64px rgba(150,180,255,0.18);
-  }
+        0 30px 60px rgba(0,0,0,0.85),
+        inset 0 0 56px rgba(150,180,255,0.18);
+}
 
-  .tile:active {
-    transform: translateY(-2px) scale(0.99);
-  }
+.tile:active {
+    transform: scale(0.98);
+}
 
-  /* This is the key fix: the image area expands to fill the card */
-  .image-frame {
+/* =========================
+   IMAGE FRAME
+========================= */
+.image-frame {
     flex: 1;
-    min-height: 0;
-    border-radius: 20px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(8px, 1.2vw, 14px);
-    /* subtle inner panel so the shield feels framed */
-    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), rgba(0,0,0,0) 62%);
-  }
+}
 
-  /* Scale shield to the available height AND width of the frame */
-  .image-frame img {
-    height: 100%;
-    width: 100%;
+.image-frame img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
     filter:
-      drop-shadow(0 18px 28px rgba(0,0,0,0.75))
-      drop-shadow(0 0 14px rgba(120,150,255,0.45));
-    transform: scale(1.02); /* tiny boost so it visually fills better */
+        drop-shadow(0 16px 26px rgba(0,0,0,0.75))
+        drop-shadow(0 0 12px rgba(120,150,255,0.45));
     user-select: none;
-    -webkit-user-drag: none;
-  }
+}
 
-  .label {
-    margin-top: 12px;
-    text-align: center;
-    font-size: clamp(20px, 2.2vw, 28px);
+/* =========================
+   LABEL
+========================= */
+.label {
+    margin-top: 10px;
+    font-size: clamp(18px, 2.2vw, 24px);
     font-weight: 900;
     letter-spacing: 1px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.75);
-  }
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
 
-  /* Transparent logo bottom-left */
-  .logo {
+/* =========================
+   LOGO
+========================= */
+.logo {
     position: fixed;
-    left: 18px;
     bottom: 18px;
+    left: 18px;
     opacity: 0.75;
     pointer-events: none;
-  }
+}
 
-  .logo img {
-    width: 140px;
-    height: auto;
-    display: block;
-  }
+.logo img {
+    width: 130px;
+}
 
-  /* Mobile: single column, make tiles tall enough, keep shields big */
-  @media (max-width: 740px) {
-    .wrapper {
-      height: 95vh;
-    }
-
+/* =========================
+   MOBILE
+========================= */
+@media (max-width: 640px) {
     .grid {
-      grid-template-columns: 1fr;
-    }
-
-    .tile {
-      padding: 14px;
+        grid-template-columns: 1fr;
+        max-width: 380px;
     }
 
     .logo img {
-      width: 110px;
+        width: 110px;
     }
-  }
+}
 
-  @media (prefers-reduced-motion: reduce) {
-    body::before { animation: none; }
-    .tile { transition: none; }
-  }
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    body::before,
+    .tile {
+        animation: none;
+        transition: none;
+    }
+}
 </style>
 </head>
 
 <body>
-  <div class="wrapper">
+
+<div class="wrapper">
     <header>
-      <h1>Choose Your Class</h1>
-      <p>Tap your shield to award House Points</p>
+        <h1>Choose Your Class</h1>
+        <p>Tap your shield to award House Points</p>
     </header>
 
     <div class="grid">
-      <div class="tile" onclick="goToForm()">
-        <div class="image-frame">
-          <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
+        <div class="tile" onclick="goToForm()">
+            <div class="image-frame">
+                <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
+            </div>
+            <div class="label">4A</div>
         </div>
-        <div class="label">4A</div>
-      </div>
 
-      <div class="tile" onclick="goToForm()">
-        <div class="image-frame">
-          <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
+        <div class="tile" onclick="goToForm()">
+            <div class="image-frame">
+                <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
+            </div>
+            <div class="label">4B</div>
         </div>
-        <div class="label">4B</div>
-      </div>
 
-      <div class="tile" onclick="goToForm()">
-        <div class="image-frame">
-          <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
+        <div class="tile" onclick="goToForm()">
+            <div class="image-frame">
+                <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
+            </div>
+            <div class="label">5A</div>
         </div>
-        <div class="label">5A</div>
-      </div>
 
-      <div class="tile" onclick="goToForm()">
-        <div class="image-frame">
-          <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
+        <div class="tile" onclick="goToForm()">
+            <div class="image-frame">
+                <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
+            </div>
+            <div class="label">5B</div>
         </div>
-        <div class="label">5B</div>
-      </div>
     </div>
-  </div>
+</div>
 
-  <div class="logo">
+<div class="logo">
     <img src="logo.png" alt="School Logo">
-  </div>
+</div>
 
-  <script>
-    function goToForm() {
-      window.location.href =
-        "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
-    }
-  </script>
+<script>
+function goToForm() {
+    window.location.href =
+        "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform";
+}
+</script>
+
 </body>
 </html>

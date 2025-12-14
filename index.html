@@ -1,142 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Selection</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class Selection</title>
 
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f2f4f8;
-        }
+  <style>
+    :root{
+      --bg: #f2f4f8;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --accent: #1e3a8a;
+      --accent2: #2563eb;
+      --shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      --radius: 18px;
+    }
 
-        .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            width: 300px;
-        }
+    * { box-sizing: border-box; }
 
-        button {
-            padding: 30px 0;
-            font-size: 24px;
-            font-weight: bold;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            background: #1e3a8a;
-            color: white;
-            transition: background 0.2s ease, transform 0.1s ease;
-        }
+    body{
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at 20% 10%, #ffffff 0%, var(--bg) 55%, #e9eef6 100%);
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
 
-        button:hover {
-            background: #2563eb;
-        }
+    .page{
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      position: relative;
+    }
 
-        button:active {
-            transform: scale(0.97);
-        }
+    header{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 2px 0 2px;
+    }
 
-        /* Side placeholder buttons */
-        .side-button {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            font-size: 28px;
-            background: #9ca3af;
-            color: white;
-            cursor: default;
-        }
+    .title{
+      margin: 0;
+      font-size: clamp(18px, 2.3vw, 26px);
+      letter-spacing: 0.2px;
+    }
 
-        .side-left {
-            left: 20px;
-        }
+    .subtitle{
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(12px, 1.4vw, 14px);
+    }
 
-        .side-right {
-            right: 20px;
-        }
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(12px, 2vw, 18px);
+    }
 
-        /* Logo placeholder */
-        .logo {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-        }
+    /* Single tile button */
+    .tile{
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      text-align: left;
+      background: transparent;
+    }
 
-        .logo img {
-            max-width: 160px;
-            height: auto;
-            opacity: 0.9;
-        }
+    .tile:focus-visible{
+      outline: 3px solid rgba(37, 99, 235, 0.45);
+      outline-offset: 4px;
+      border-radius: calc(var(--radius) + 6px);
+    }
 
-        /* Corner images */
-        .corner-images {
-            position: fixed;
-            top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    .tile-card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      min-height: clamp(150px, 22vh, 230px);
+      display: grid;
+      grid-template-rows: 1fr auto;
+    }
 
-        .top-left {
-            left: 20px;
-        }
+    .tile:hover .tile-card{
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.16);
+    }
 
-        .top-right {
-            right: 20px;
-        }
+    .tile:active .tile-card{
+      transform: translateY(0);
+    }
 
-        .corner-images img {
-            width: 80%;
-            height: auto;
-        }
-    </style>
+    .tile-media{
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: clamp(10px, 2vw, 16px);
+      background: linear-gradient(135deg, rgba(30,58,138,0.08), rgba(37,99,235,0.06));
+    }
+
+    .tile-media img{
+      width: min(320px, 90%);
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 10px 16px rgba(15, 23, 42, 0.18));
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .tile-footer{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 14px;
+      background: #ffffff;
+      border-top: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .tile-label{
+      font-size: clamp(18px, 2.2vw, 22px);
+      font-weight: 800;
+      color: var(--ink);
+      letter-spacing: 0.3px;
+    }
+
+    .tile-cta{
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      padding: 8px 12px;
+      border-radius: 999px;
+      box-shadow: 0 8px 16px rgba(30, 58, 138, 0.22);
+      white-space: nowrap;
+    }
+
+    /* Side placeholder buttons */
+    .side-button{
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      font-size: 22px;
+      font-weight: 800;
+      border: 1px solid rgba(15, 23, 42, 0.14);
+      background: rgba(100,116,139,0.20);
+      color: rgba(15,23,42,0.55);
+      cursor: default;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .side-left{ left: 14px; }
+    .side-right{ right: 14px; }
+
+    /* Logo bottom-left */
+    .logo{
+      position: fixed;
+      bottom: 14px;
+      left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(15, 23, 42, 0.10);
+      border-radius: 14px;
+      padding: 10px 12px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .logo img{
+      width: 130px;
+      height: auto;
+      display: block;
+      opacity: 0.95;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 620px){
+      header{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+      .grid{
+        grid-template-columns: 1fr;
+      }
+      .side-button{
+        display: none; /* stops accidental taps + cleans up mobile */
+      }
+      .logo img{
+        width: 110px;
+      }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .tile-card{ transition: none; }
+      .tile:hover .tile-card{ transform: none; }
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page" aria-label="Class selection">
+    <header>
+      <h1 class="title">Choose your class</h1>
+      <p class="subtitle">Tap your class to open the House Points form.</p>
+    </header>
 
-    <!-- Top left images -->
-    <div class="corner-images top-left">
-        <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
-        <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
-    </div>
+    <section class="grid" aria-label="Class buttons">
+      <button class="tile" onclick="goToForm('4A')" aria-label="Open form for class 4A">
+        <div class="tile-card">
+          <div class="tile-media">
+            <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
+          </div>
+          <div class="tile-footer">
+            <div class="tile-label">4A</div>
+            <div class="tile-cta">Open</div>
+          </div>
+        </div>
+      </button>
 
-    <!-- Top right images -->
-    <div class="corner-images top-right">
-        <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
-        <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
-    </div>
+      <button class="tile" onclick="goToForm('4B')" aria-label="Open form for class 4B">
+        <div class="tile-card">
+          <div class="tile-media">
+            <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
+          </div>
+          <div class="tile-footer">
+            <div class="tile-label">4B</div>
+            <div class="tile-cta">Open</div>
+          </div>
+        </div>
+      </button>
 
-    <!-- Main buttons -->
-    <div class="container">
-        <button onclick="goToForm()">4A</button>
-        <button onclick="goToForm()">4B</button>
-        <button onclick="goToForm()">5A</button>
-        <button onclick="goToForm()">5B</button>
-    </div>
+      <button class="tile" onclick="goToForm('5A')" aria-label="Open form for class 5A">
+        <div class="tile-card">
+          <div class="tile-media">
+            <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
+          </div>
+          <div class="tile-footer">
+            <div class="tile-label">5A</div>
+            <div class="tile-cta">Open</div>
+          </div>
+        </div>
+      </button>
 
-    <!-- Side placeholder buttons -->
-    <button class="side-button side-left">X</button>
-    <button class="side-button side-right">X</button>
+      <button class="tile" onclick="goToForm('5B')" aria-label="Open form for class 5B">
+        <div class="tile-card">
+          <div class="tile-media">
+            <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
+          </div>
+          <div class="tile-footer">
+            <div class="tile-label">5B</div>
+            <div class="tile-cta">Open</div>
+          </div>
+        </div>
+      </button>
+    </section>
+  </main>
 
-    <!-- Logo -->
-    <div class="logo">
-        <img src="logo.png" alt="Logo placeholder">
-    </div>
+  <!-- Side placeholder buttons -->
+  <button class="side-button side-left" aria-hidden="true">X</button>
+  <button class="side-button side-right" aria-hidden="true">X</button>
 
-    <script>
-        function goToForm() {
-            window.location.href = "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
-        }
-    </script>
+  <!-- Logo -->
+  <div class="logo" aria-label="School logo">
+    <img src="logo.png" alt="Logo">
+  </div>
 
+  <script>
+    // If you later want different links per class, you can map them here.
+    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
+
+    function goToForm(className) {
+      // Optional: append class name as a URL hint (only useful if your Form is set up to read it)
+      // window.location.href = FORM_URL + "&entry.XXXX=" + encodeURIComponent(className);
+
+      window.location.href = FORM_URL;
+    }
+  </script>
 </body>
 </html>

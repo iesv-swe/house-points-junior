@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Choose Your Class</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
 
-html, body {
-    height: 100%;
-}
-
-body {
+  body {
     font-family: "Segoe UI", Tahoma, Arial, sans-serif;
     background: radial-gradient(circle at top, #1b2a4a 0%, #0b1020 45%, #02030a 100%);
     color: #e6ebff;
@@ -24,203 +17,210 @@ body {
     justify-content: center;
     align-items: center;
     overflow: hidden;
-}
+    padding: 20px;
+  }
 
-/* subtle glow */
-body::before {
+  body::before {
     content: "";
     position: fixed;
     inset: 0;
     background:
-        radial-gradient(circle at 25% 15%, rgba(120,150,255,0.15), transparent 40%),
-        radial-gradient(circle at 75% 85%, rgba(80,120,255,0.10), transparent 45%);
+      radial-gradient(circle at 25% 15%, rgba(120,150,255,0.16), transparent 42%),
+      radial-gradient(circle at 75% 85%, rgba(80,120,255,0.12), transparent 48%);
     animation: glow 18s ease-in-out infinite alternate;
     pointer-events: none;
-}
+  }
 
-@keyframes glow {
+  @keyframes glow {
     from { opacity: 0.6; }
     to   { opacity: 1; }
-}
+  }
 
-/* layout */
-.wrapper {
-    width: min(1100px, 95vw);
-    height: min(760px, 92vh);
+  .wrapper {
+    width: min(1200px, 96vw);
+    height: min(820px, 94vh);
     display: flex;
     flex-direction: column;
     gap: 18px;
-}
+  }
 
-header {
+  header {
     text-align: center;
-}
+    padding-top: 6px;
+  }
 
-header h1 {
-    font-size: clamp(22px, 3vw, 34px);
-}
+  header h1 {
+    font-size: clamp(22px, 3vw, 36px);
+    letter-spacing: 0.6px;
+  }
 
-header p {
+  header p {
+    margin-top: 6px;
     color: #a9b4ff;
     font-size: clamp(13px, 1.5vw, 16px);
-}
+  }
 
-/* grid */
-.grid {
+  /* Grid: keep the cards from becoming ridiculously wide */
+  .grid {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(18px, 3vw, 30px);
-}
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: clamp(16px, 2.6vw, 26px);
+    align-items: stretch;
+  }
 
-/* tile */
-.tile {
-    background: linear-gradient(
-        145deg,
-        rgba(255,255,255,0.08),
-        rgba(255,255,255,0.02)
-    );
-    border-radius: 24px;
+  /* Tile: define a predictable card height; scale content within it */
+  .tile {
+    border-radius: 26px;
     border: 1px solid rgba(255,255,255,0.12);
+    background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
     box-shadow:
-        0 20px 45px rgba(0,0,0,0.7),
-        inset 0 0 40px rgba(120,150,255,0.10);
+      0 22px 50px rgba(0,0,0,0.72),
+      inset 0 0 42px rgba(120,150,255,0.10);
     cursor: pointer;
+    padding: clamp(14px, 1.6vw, 18px);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 22px 20px 18px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
+    min-height: 0; /* important for flex children sizing correctly */
+  }
 
-.tile:hover {
+  .tile:hover {
     transform: translateY(-6px);
     box-shadow:
-        0 32px 65px rgba(0,0,0,0.85),
-        inset 0 0 60px rgba(150,180,255,0.18);
-}
+      0 34px 70px rgba(0,0,0,0.86),
+      inset 0 0 64px rgba(150,180,255,0.18);
+  }
 
-/* IMAGE FRAME — THIS FIXES SCALING */
-.image-frame {
-    width: 100%;
-    height: 100%;
-    max-height: 300px;
+  .tile:active {
+    transform: translateY(-2px) scale(0.99);
+  }
+
+  /* This is the key fix: the image area expands to fill the card */
+  .image-frame {
+    flex: 1;
+    min-height: 0;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+    padding: clamp(8px, 1.2vw, 14px);
+    /* subtle inner panel so the shield feels framed */
+    background: radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), rgba(0,0,0,0) 62%);
+  }
 
-.image-frame img {
+  /* Scale shield to the available height AND width of the frame */
+  .image-frame img {
     height: 100%;
-    max-height: 280px;
-    width: auto;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100%;
     object-fit: contain;
     filter:
-        drop-shadow(0 18px 28px rgba(0,0,0,0.75))
-        drop-shadow(0 0 14px rgba(120,150,255,0.45));
-}
+      drop-shadow(0 18px 28px rgba(0,0,0,0.75))
+      drop-shadow(0 0 14px rgba(120,150,255,0.45));
+    transform: scale(1.02); /* tiny boost so it visually fills better */
+    user-select: none;
+    -webkit-user-drag: none;
+  }
 
-/* label */
-.label {
-    margin-top: 10px;
-    font-size: clamp(20px, 2.4vw, 26px);
-    font-weight: 800;
+  .label {
+    margin-top: 12px;
+    text-align: center;
+    font-size: clamp(20px, 2.2vw, 28px);
+    font-weight: 900;
     letter-spacing: 1px;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
-}
+    text-shadow: 0 2px 8px rgba(0,0,0,0.75);
+  }
 
-/* logo */
-.logo {
+  /* Transparent logo bottom-left */
+  .logo {
     position: fixed;
-    bottom: 18px;
     left: 18px;
-}
-
-.logo img {
-    width: 140px;
+    bottom: 18px;
     opacity: 0.75;
-}
+    pointer-events: none;
+  }
 
-/* mobile */
-@media (max-width: 700px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
+  .logo img {
+    width: 140px;
+    height: auto;
+    display: block;
+  }
 
+  /* Mobile: single column, make tiles tall enough, keep shields big */
+  @media (max-width: 740px) {
     .wrapper {
-        height: 95vh;
+      height: 95vh;
     }
 
-    .image-frame {
-        max-height: 240px;
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tile {
+      padding: 14px;
     }
 
     .logo img {
-        width: 110px;
+      width: 110px;
     }
-}
+  }
 
-/* reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    body::before,
-    .tile {
-        animation: none;
-        transition: none;
-    }
-}
+  @media (prefers-reduced-motion: reduce) {
+    body::before { animation: none; }
+    .tile { transition: none; }
+  }
 </style>
 </head>
 
 <body>
-
-<div class="wrapper">
+  <div class="wrapper">
     <header>
-        <h1>Choose Your Class</h1>
-        <p>Tap your shield to award House Points</p>
+      <h1>Choose Your Class</h1>
+      <p>Tap your shield to award House Points</p>
     </header>
 
     <div class="grid">
-        <div class="tile" onclick="goToForm()">
-            <div class="image-frame">
-                <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
-            </div>
-            <div class="label">4A</div>
+      <div class="tile" onclick="goToForm()">
+        <div class="image-frame">
+          <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
         </div>
+        <div class="label">4A</div>
+      </div>
 
-        <div class="tile" onclick="goToForm()">
-            <div class="image-frame">
-                <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
-            </div>
-            <div class="label">4B</div>
+      <div class="tile" onclick="goToForm()">
+        <div class="image-frame">
+          <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
         </div>
+        <div class="label">4B</div>
+      </div>
 
-        <div class="tile" onclick="goToForm()">
-            <div class="image-frame">
-                <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
-            </div>
-            <div class="label">5A</div>
+      <div class="tile" onclick="goToForm()">
+        <div class="image-frame">
+          <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
         </div>
+        <div class="label">5A</div>
+      </div>
 
-        <div class="tile" onclick="goToForm()">
-            <div class="image-frame">
-                <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
-            </div>
-            <div class="label">5B</div>
+      <div class="tile" onclick="goToForm()">
+        <div class="image-frame">
+          <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
         </div>
+        <div class="label">5B</div>
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="logo">
+  <div class="logo">
     <img src="logo.png" alt="School Logo">
-</div>
+  </div>
 
-<script>
-function goToForm() {
-    window.location.href =
-        "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform";
-}
-</script>
-
+  <script>
+    function goToForm() {
+      window.location.href =
+        "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing&ouid=101971881823357341028";
+    }
+  </script>
 </body>
 </html>

@@ -3,21 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>House Points</title>
+<title>House Points Ceremony</title>
 
 <style>
 /* =====================
    RESET
 ===================== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
 
 /* =====================
    BACKGROUND
@@ -50,14 +43,18 @@ body::before {
     flex-direction: column;
     align-items: center;
     gap: 26px;
+    transition: filter 0.4s ease;
 }
 
-header {
-    text-align: center;
+.wrapper.dim {
+    filter: blur(4px) brightness(0.6);
 }
+
+header { text-align: center; }
 
 header h1 {
     font-size: clamp(22px, 3vw, 32px);
+    letter-spacing: 1px;
 }
 
 header p {
@@ -94,11 +91,14 @@ header p {
     align-items: center;
     justify-content: center;
     padding: 14px;
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .tile:hover {
-    transform: translateY(-4px);
+    transform: translateY(-6px);
+    box-shadow:
+        0 30px 60px rgba(0,0,0,0.85),
+        inset 0 0 45px rgba(150,180,255,0.18);
 }
 
 .tile img {
@@ -118,26 +118,36 @@ header p {
 }
 
 /* =====================
-   OVERLAY PANEL
+   OVERLAY (CEREMONY)
 ===================== */
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(2,3,10,0.92);
+    background: radial-gradient(circle at center, rgba(20,30,60,0.98), #02030a 70%);
     display: none;
     align-items: center;
     justify-content: center;
+    z-index: 10;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 .panel {
-    background: linear-gradient(145deg, #0f172a, #020617);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 22px;
-    padding: 28px;
+    background: linear-gradient(160deg, #0f172a, #020617);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 24px;
+    padding: 32px;
     width: min(92%, 520px);
     display: grid;
-    gap: 20px;
+    gap: 22px;
     text-align: center;
+    box-shadow:
+        0 40px 90px rgba(0,0,0,0.85),
+        inset 0 0 40px rgba(120,150,255,0.08);
 }
 
 .panel h2 {
@@ -151,29 +161,71 @@ header p {
 .houses, .points {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
+    gap: 14px;
 }
 
 .panel button {
     background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
     color: #e6ebff;
-    padding: 14px;
-    border-radius: 14px;
+    padding: 16px;
+    border-radius: 16px;
     font-size: 16px;
     cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.panel button:hover {
+    background: rgba(120,150,255,0.15);
 }
 
 .panel button.active {
-    outline: 2px solid #7aa2ff;
+    background: rgba(120,150,255,0.28);
+    box-shadow:
+        0 0 18px rgba(120,150,255,0.6),
+        inset 0 0 22px rgba(180,210,255,0.35);
 }
 
+/* =====================
+   SUBMIT RITUAL
+===================== */
 .submit {
-    margin-top: 10px;
+    margin-top: 6px;
     font-size: 18px;
     font-weight: 700;
-    background: #7aa2ff;
+    background: linear-gradient(145deg, #7aa2ff, #9bb6ff);
     color: #020617;
+    padding: 16px;
+    border-radius: 18px;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.15s ease;
+}
+
+.submit:active {
+    transform: scale(0.96);
+}
+
+/* =====================
+   CONFIRMATION
+===================== */
+.confirmation {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(120,150,255,0.35), rgba(2,3,10,0.95));
+    z-index: 20;
+    animation: fadeIn 0.4s ease;
+}
+
+.confirmation div {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-shadow: 0 0 30px rgba(150,180,255,0.8);
 }
 
 /* =====================
@@ -186,18 +238,16 @@ header p {
     opacity: 0.75;
 }
 
-.logo img {
-    width: 120px;
-}
+.logo img { width: 120px; }
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
+<div class="wrapper" id="main">
     <header>
         <h1>Choose Your Class</h1>
-        <p>Tap a class to award House Points</p>
+        <p>Begin the House Points Ceremony</p>
     </header>
 
     <div class="grid">
@@ -225,21 +275,25 @@ header p {
         <h2 id="panelTitle"></h2>
 
         <div class="houses">
-            <button onclick="selectHouse(1)">House 1</button>
-            <button onclick="selectHouse(2)">House 2</button>
-            <button onclick="selectHouse(3)">House 3</button>
-            <button onclick="selectHouse(4)">House 4</button>
+            <button onclick="selectHouse(1, event)">House 1</button>
+            <button onclick="selectHouse(2, event)">House 2</button>
+            <button onclick="selectHouse(3, event)">House 3</button>
+            <button onclick="selectHouse(4, event)">House 4</button>
         </div>
 
         <div class="points">
-            <button onclick="selectPoints(1)">+1</button>
-            <button onclick="selectPoints(2)">+2</button>
-            <button onclick="selectPoints(3)">+3</button>
-            <button onclick="selectPoints(4)">+4</button>
+            <button onclick="selectPoints(1, event)">+1</button>
+            <button onclick="selectPoints(2, event)">+2</button>
+            <button onclick="selectPoints(3, event)">+3</button>
+            <button onclick="selectPoints(4, event)">+4</button>
         </div>
 
-        <button class="submit" onclick="submitPoints()">Submit</button>
+        <button class="submit" onclick="submitPoints()">Bestow Points</button>
     </div>
+</div>
+
+<div class="confirmation" id="confirmation">
+    <div>Points Awarded</div>
 </div>
 
 <div class="logo">
@@ -251,8 +305,8 @@ header p {
 <script>
 /* ========= CONFIG ========= */
 const FORM_URL = "https://docs.google.com/forms/d/e/FORM_ID/formResponse";
-const FIELD_CLASS = "entry.1111111111";
-const FIELD_HOUSE = "entry.2222222222";
+const FIELD_CLASS  = "entry.1111111111";
+const FIELD_HOUSE  = "entry.2222222222";
 const FIELD_POINTS = "entry.3333333333";
 /* ========================== */
 
@@ -262,20 +316,21 @@ let points = null;
 
 function openPanel(cls) {
     currentClass = cls;
-    document.getElementById("panelTitle").textContent = cls + " – Award Points";
+    document.getElementById("panelTitle").textContent = cls + " – House Points Ceremony";
     document.getElementById("overlay").style.display = "flex";
+    document.getElementById("main").classList.add("dim");
 }
 
-function selectHouse(h) {
+function selectHouse(h, e) {
     house = h;
     document.querySelectorAll(".houses button").forEach(b => b.classList.remove("active"));
-    event.target.classList.add("active");
+    e.target.classList.add("active");
 }
 
-function selectPoints(p) {
+function selectPoints(p, e) {
     points = p;
     document.querySelectorAll(".points button").forEach(b => b.classList.remove("active"));
-    event.target.classList.add("active");
+    e.target.classList.add("active");
 }
 
 function submitPoints() {
@@ -298,8 +353,14 @@ function submitPoints() {
     form.submit();
     form.remove();
 
-    house = points = null;
     document.getElementById("overlay").style.display = "none";
+    document.getElementById("confirmation").style.display = "flex";
+
+    setTimeout(() => {
+        document.getElementById("confirmation").style.display = "none";
+        document.getElementById("main").classList.remove("dim");
+        house = points = null;
+    }, 1200);
 }
 </script>
 

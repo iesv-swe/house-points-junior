@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Choose Your Class</title>
+<title>House Points</title>
 
 <style>
 /* =====================
@@ -32,7 +32,6 @@ body {
     overflow: hidden;
 }
 
-/* soft ambient glow */
 body::before {
     content: "";
     position: fixed;
@@ -44,7 +43,7 @@ body::before {
 }
 
 /* =====================
-   PAGE STRUCTURE
+   LAYOUT
 ===================== */
 .wrapper {
     display: flex;
@@ -68,18 +67,14 @@ header p {
 }
 
 /* =====================
-   GRID (CONTENT-SIZED)
+   CLASS GRID
 ===================== */
 .grid {
     display: grid;
     grid-template-columns: repeat(2, auto);
     gap: 36px;
-    width: fit-content; /* CRITICAL */
 }
 
-/* =====================
-   FLAG CARD (SMALL)
-===================== */
 .tile {
     width: 180px;
     height: 220px;
@@ -104,18 +99,8 @@ header p {
 
 .tile:hover {
     transform: translateY(-4px);
-    box-shadow:
-        0 26px 55px rgba(0,0,0,0.8),
-        inset 0 0 42px rgba(150,180,255,0.15);
 }
 
-.tile:active {
-    transform: scale(0.97);
-}
-
-/* =====================
-   IMAGE (FULLY VISIBLE)
-===================== */
 .tile img {
     max-width: 100%;
     max-height: 150px;
@@ -123,12 +108,8 @@ header p {
     filter:
         drop-shadow(0 14px 22px rgba(0,0,0,0.75))
         drop-shadow(0 0 10px rgba(120,150,255,0.35));
-    user-select: none;
 }
 
-/* =====================
-   LABEL
-===================== */
 .label {
     margin-top: 10px;
     font-size: 18px;
@@ -137,47 +118,76 @@ header p {
 }
 
 /* =====================
-   LOGO (TRANSPARENT)
+   OVERLAY PANEL
+===================== */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,3,10,0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel {
+    background: linear-gradient(145deg, #0f172a, #020617);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 22px;
+    padding: 28px;
+    width: min(92%, 520px);
+    display: grid;
+    gap: 20px;
+    text-align: center;
+}
+
+.panel h2 {
+    font-size: 22px;
+    letter-spacing: 1px;
+}
+
+/* =====================
+   HOUSE + POINTS
+===================== */
+.houses, .points {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.panel button {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #e6ebff;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.panel button.active {
+    outline: 2px solid #7aa2ff;
+}
+
+.submit {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    background: #7aa2ff;
+    color: #020617;
+}
+
+/* =====================
+   LOGO
 ===================== */
 .logo {
     position: fixed;
     bottom: 18px;
     left: 18px;
     opacity: 0.75;
-    pointer-events: none;
 }
 
 .logo img {
     width: 120px;
-}
-
-/* =====================
-   MOBILE
-===================== */
-@media (max-width: 600px) {
-    .grid {
-        gap: 24px;
-    }
-
-    .tile {
-        width: 150px;
-        height: 190px;
-    }
-
-    .tile img {
-        max-height: 120px;
-    }
-
-    .logo img {
-        width: 100px;
-    }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    .tile {
-        transition: none;
-    }
 }
 </style>
 </head>
@@ -187,40 +197,109 @@ header p {
 <div class="wrapper">
     <header>
         <h1>Choose Your Class</h1>
-        <p>Tap your flag to award House Points</p>
+        <p>Tap a class to award House Points</p>
     </header>
 
     <div class="grid">
-        <div class="tile" onclick="goToForm()">
-            <img src="https://iesv-swe.github.io/house-points-junior/4A.png" alt="4A">
+        <div class="tile" onclick="openPanel('4A')">
+            <img src="https://iesv-swe.github.io/house-points-junior/4A.png">
             <div class="label">4A</div>
         </div>
-
-        <div class="tile" onclick="goToForm()">
-            <img src="https://iesv-swe.github.io/house-points-junior/4B.png" alt="4B">
+        <div class="tile" onclick="openPanel('4B')">
+            <img src="https://iesv-swe.github.io/house-points-junior/4B.png">
             <div class="label">4B</div>
         </div>
-
-        <div class="tile" onclick="goToForm()">
-            <img src="https://iesv-swe.github.io/house-points-junior/5A.png" alt="5A">
+        <div class="tile" onclick="openPanel('5A')">
+            <img src="https://iesv-swe.github.io/house-points-junior/5A.png">
             <div class="label">5A</div>
         </div>
-
-        <div class="tile" onclick="goToForm()">
-            <img src="https://iesv-swe.github.io/house-points-junior/5B.png" alt="5B">
+        <div class="tile" onclick="openPanel('5B')">
+            <img src="https://iesv-swe.github.io/house-points-junior/5B.png">
             <div class="label">5B</div>
         </div>
     </div>
 </div>
 
-<div class="logo">
-    <img src="logo.png" alt="School Logo">
+<div class="overlay" id="overlay">
+    <div class="panel">
+        <h2 id="panelTitle"></h2>
+
+        <div class="houses">
+            <button onclick="selectHouse(1)">House 1</button>
+            <button onclick="selectHouse(2)">House 2</button>
+            <button onclick="selectHouse(3)">House 3</button>
+            <button onclick="selectHouse(4)">House 4</button>
+        </div>
+
+        <div class="points">
+            <button onclick="selectPoints(1)">+1</button>
+            <button onclick="selectPoints(2)">+2</button>
+            <button onclick="selectPoints(3)">+3</button>
+            <button onclick="selectPoints(4)">+4</button>
+        </div>
+
+        <button class="submit" onclick="submitPoints()">Submit</button>
+    </div>
 </div>
 
+<div class="logo">
+    <img src="logo.png">
+</div>
+
+<iframe name="hiddenFrame" style="display:none;"></iframe>
+
 <script>
-function goToForm() {
-    window.location.href =
-        "https://docs.google.com/forms/d/e/1FAIpQLSewmU8OmqTGWjwE9WZJnkJCmpv9BS2uLM4utrj4bi9A18IP8A/viewform?usp=sharing";
+/* ========= CONFIG ========= */
+const FORM_URL = "https://docs.google.com/forms/d/e/FORM_ID/formResponse";
+const FIELD_CLASS = "entry.1111111111";
+const FIELD_HOUSE = "entry.2222222222";
+const FIELD_POINTS = "entry.3333333333";
+/* ========================== */
+
+let currentClass = "";
+let house = null;
+let points = null;
+
+function openPanel(cls) {
+    currentClass = cls;
+    document.getElementById("panelTitle").textContent = cls + " – Award Points";
+    document.getElementById("overlay").style.display = "flex";
+}
+
+function selectHouse(h) {
+    house = h;
+    document.querySelectorAll(".houses button").forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+function selectPoints(p) {
+    points = p;
+    document.querySelectorAll(".points button").forEach(b => b.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+function submitPoints() {
+    if (!house || !points) return;
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = FORM_URL;
+    form.target = "hiddenFrame";
+
+    [[FIELD_CLASS, currentClass],[FIELD_HOUSE, house],[FIELD_POINTS, points]].forEach(
+        ([k,v]) => {
+            const i = document.createElement("input");
+            i.type="hidden"; i.name=k; i.value=v;
+            form.appendChild(i);
+        }
+    );
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+
+    house = points = null;
+    document.getElementById("overlay").style.display = "none";
 }
 </script>
 
